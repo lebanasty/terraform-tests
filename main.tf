@@ -50,3 +50,16 @@ resource "aws_lb" "example" {
   load_balancer_type = "application"
   subnets = data.aws_subnet_ids.default.ids
 }
+resource "aws_lb_listener" "http" {
+  loadload_balancer_arn = aws_lb.example.certificate_arn
+  port = 80
+  protocol = "HTTP"
+  default_action {
+    type = "fixed_response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "404: Page not found"
+      status_code = 404
+    }
+  }  
+}
