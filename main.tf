@@ -10,9 +10,6 @@ resource "aws_launch_configuration" "example" {
               echo "Hello, World" > index.html
               nohup busybox httpd -f -p ${var.server_port} &
               EOF
-  tags = {
-    Name = "terraform-example"
-  }
   lifecycle {
     create_before_destroy = true
   }
@@ -48,7 +45,8 @@ variable "server_port" {
   #default = 8080
   type = number
 }
-output "server_IP" {
-  description = "aws public IP address"
-  value = aws_instance.example.public_ip
+resource "aws_lb" "example" {
+  name = "terraform-asg-example"
+  load_balancer_type = "application"
+  subnets = data.aws_subnet_ids.default.ids
 }
